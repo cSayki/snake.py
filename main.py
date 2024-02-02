@@ -19,6 +19,7 @@ snake_positions = [(2, 2)]
 snake_direction = (1, 0)
 
 T = set()
+nb_pomme = 0
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Snake tu connais")
@@ -55,6 +56,7 @@ def case():
             T.add(coord)
 
 def draw_apple():
+    global nb_pomme
     x = random.randint(0, 15)
     y = random.randint(0, 15)
     while (x, y) in snake_positions:
@@ -63,10 +65,16 @@ def draw_apple():
         
     apple_rect = pygame.Rect(x * 50 + 5, y * 50 + 5, 40, 40)
     pygame.draw.rect(screen, (255, 0, 0), apple_rect)
+    nb_pomme += 1 
     pygame.display.update()
     
-    print(x, y)
+    #print(x, y)
     return x, y
+
+def score():
+    global nb_pomme
+    score_final = nb_pomme * 100
+    return score_final
 
 case()
 apple_x, apple_y = draw_apple()
@@ -78,14 +86,15 @@ while run:
         if event.type == pygame.QUIT:
             run = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP and snake_direction != (0, 1):
+            if event.key == pygame.K_z and snake_direction != (0, 1):
                 snake_direction = (0, -1)
-            elif event.key == pygame.K_DOWN and snake_direction != (0, -1):
+            elif event.key == pygame.K_s and snake_direction != (0, -1):
                 snake_direction = (0, 1)
-            elif event.key == pygame.K_LEFT and snake_direction != (1, 0):
+            elif event.key == pygame.K_q and snake_direction != (1, 0):
                 snake_direction = (-1, 0)
-            elif event.key == pygame.K_RIGHT and snake_direction != (-1, 0):
+            elif event.key == pygame.K_d and snake_direction != (-1, 0):
                 snake_direction = (1, 0)
+
 
     snake_head = (snake_positions[0][0] + snake_direction[0], snake_positions[0][1] + snake_direction[1])
     snake_positions.insert(0, snake_head)
@@ -101,6 +110,7 @@ while run:
         snake_head[1] < 0 or snake_head[1] >= 16 or
         snake_head in snake_positions[1:]
     ):
+        print("score final :", score())
         run = False
 
     draw_background()
